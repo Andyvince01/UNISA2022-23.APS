@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-08-14T22:28:10.512Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.203" etag="C_U_eR2dPWWAu_ehC4EG" version="21.6.8" type="google" pages="3">
+<mxfile host="app.diagrams.net" modified="2023-08-15T20:27:29.243Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.203" etag="_j1kMrOZ4PhNN8sqZ_wj" version="21.6.8" type="google" pages="4">
   <diagram id="ldkA3jC2axjfQunqVSaO" name="GP 2.0">
     <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -194,7 +194,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="2pvSOrKRdk1YfTlj5iOp-6" value="&lt;font style=&quot;&quot;&gt;&lt;font style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 13px;&quot;&gt;RS&lt;/font&gt;&lt;sub style=&quot;&quot;&gt;&lt;span style=&quot;font-size: 13px;&quot;&gt;P&lt;/span&gt;&lt;font style=&quot;font-size: 8px;&quot;&gt;1&lt;/font&gt;&lt;/sub&gt;&lt;/font&gt;&lt;/font&gt;" style="whiteSpace=wrap;html=1;rounded=1;shadow=1;labelBackgroundColor=none;strokeWidth=2;fontFamily=Verdana;fontSize=12;align=center;sketch=1;curveFitting=1;jiggle=2;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontStyle=1;labelBorderColor=none;" vertex="1" parent="1">
+        <mxCell id="2pvSOrKRdk1YfTlj5iOp-6" value="&lt;font style=&quot;border-color: var(--border-color); font-size: 13px;&quot;&gt;RS&lt;/font&gt;&lt;sub style=&quot;border-color: var(--border-color);&quot;&gt;P&lt;font style=&quot;border-color: var(--border-color); font-size: 8px;&quot;&gt;1&lt;/font&gt;&lt;/sub&gt;" style="whiteSpace=wrap;html=1;rounded=1;shadow=1;labelBackgroundColor=none;strokeWidth=2;fontFamily=Verdana;fontSize=12;align=center;sketch=1;curveFitting=1;jiggle=2;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontStyle=1;labelBorderColor=none;" vertex="1" parent="1">
           <mxGeometry x="435" y="500" width="120" height="40" as="geometry" />
         </mxCell>
         <mxCell id="2pvSOrKRdk1YfTlj5iOp-7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeWidth=2;labelBackgroundColor=none;fontColor=default;sketch=1;curveFitting=1;jiggle=2;strokeColor=#A8201A;fontStyle=1;labelBorderColor=none;" edge="1" parent="1" source="2pvSOrKRdk1YfTlj5iOp-8" target="2pvSOrKRdk1YfTlj5iOp-16">
@@ -476,6 +476,40 @@
             <Array as="points">
               <mxPoint x="2140" y="410" />
               <mxPoint x="2090" y="360" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="YX0JamvGMwwGAHghLGOr" name="Pagina-4">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Y8q65-SU_Om5g4f4NEVx-16" value="" style="shape=note;strokeWidth=2;fontSize=14;size=20;whiteSpace=wrap;html=1;fillColor=#FFF7EB;strokeColor=#d6b656;fontColor=#666600;sketch=1;hachureGap=4;jiggle=2;curveFitting=1;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;gradientColor=none;shadow=0;" vertex="1" parent="1">
+          <mxGeometry x="80" y="40" width="880" height="1080" as="geometry" />
+        </mxCell>
+        <mxCell id="Y8q65-SU_Om5g4f4NEVx-10" value="&lt;b&gt;&lt;font style=&quot;font-size: 24px;&quot;&gt;Approfondimento - Malware, Virus e Trojans&lt;/font&gt;&lt;/b&gt;" style="html=1;shape=mxgraph.infographic.ribbonSimple;notch1=20;notch2=20;align=center;verticalAlign=middle;fontSize=14;fontStyle=0;fillColor=#f8cecc;whiteSpace=wrap;sketch=1;hachureGap=4;jiggle=2;curveFitting=1;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="90" y="60" width="550" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Y8q65-SU_Om5g4f4NEVx-14" value="" style="curved=1;endArrow=classic;html=1;rounded=0;sketch=1;hachureGap=4;jiggle=2;curveFitting=1;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;fontSize=16;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="20" y="70" as="sourcePoint" />
+            <mxPoint x="70" y="20" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="70" y="70" />
+              <mxPoint x="20" y="20" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Y8q65-SU_Om5g4f4NEVx-17" value="" style="curved=1;endArrow=classic;html=1;rounded=0;sketch=1;hachureGap=4;jiggle=2;curveFitting=1;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;fontSize=16;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="10" y="800" as="sourcePoint" />
+            <mxPoint x="60" y="750" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="60" y="800" />
+              <mxPoint x="10" y="750" />
             </Array>
           </mxGeometry>
         </mxCell>
