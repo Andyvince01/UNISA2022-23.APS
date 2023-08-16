@@ -1,3 +1,4 @@
+package JokerCasino;
 import javax.sound.sampled.*;
 
 public class MusicPlayer {
@@ -7,7 +8,7 @@ public class MusicPlayer {
 
     public static void play() {
         try {
-            audioInputStream = AudioSystem.getAudioInputStream(MusicPlayer.class.getResource("Varie\\Franco Califano - La mia libertà.wav"));
+            audioInputStream = AudioSystem.getAudioInputStream(MusicPlayer.class.getResource("/Varie/Franco Califano - La mia libertà.wav"));
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);
 
@@ -18,7 +19,7 @@ public class MusicPlayer {
                 @Override
                 public void update(LineEvent event) {
                     if (event.getType() == LineEvent.Type.START) {
-                        System.out.println("Franco Califano - La mia libertà (1981)");
+                        System.out.println("♪ Franco Califano - La mia libertà (1981)");
                     } else if (event.getType() == LineEvent.Type.STOP) {
                         clip.close();
                     }
@@ -52,6 +53,14 @@ public class MusicPlayer {
 
         private boolean playing = true;
 
+        public boolean isPlaying() {
+            return playing;
+        }
+
+        public void setPlaying(boolean playing) {
+            this.playing = playing;
+        }        
+
         @Override
         public void run() {
             MusicPlayer.play();
@@ -63,23 +72,6 @@ public class MusicPlayer {
                 }
             }
         }
-    }
 
-    public static void main(String[] args) {
-        String asciiArt = "█▀▄▀█ █▀█       █ █▀█ █▄▀ █▀▀ █▀█ ▀ █▀   █▀▀ ▄▀█ █▀ █ █▄ █ █▀█\n" +
-                          "█ ▀ █ █▀▄ ▄   █▄█ █▄█ █ █ ██▄ █▀▄   ▄█   █▄▄ █▀█ ▄█ █ █ ▀█ █▄█";
-        System.out.println(asciiArt);
-        MusicThread musicThread = new MusicThread();
-        musicThread.start();
-
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        musicThread.playing = false;
-
-        MusicPlayer.stop();
     }
 }
