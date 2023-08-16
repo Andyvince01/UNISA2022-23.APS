@@ -1,0 +1,7 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Users\\andyv\\OneDrive\\Desktop\\bcpkix-jdk18on-176.jar",
+        "c:\\Users\\andyv\\OneDrive\\Desktop\\bcprov-jdk18on-176.jar"
+    ]
+}

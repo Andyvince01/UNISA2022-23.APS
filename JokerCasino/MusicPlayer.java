@@ -19,7 +19,7 @@ public class MusicPlayer {
                 @Override
                 public void update(LineEvent event) {
                     if (event.getType() == LineEvent.Type.START) {
-                        System.out.println("♪ Franco Califano - La mia libertà (1981)");
+                        System.out.println("Franco Califano - La mia libertà (1981)\n");
                     } else if (event.getType() == LineEvent.Type.STOP) {
                         clip.close();
                     }
@@ -32,7 +32,7 @@ public class MusicPlayer {
 
         if (clip != null) {
             clip.setFramePosition(0);
-            clip.start();
+            clip.loop(-1);
         }
     }
 
@@ -49,29 +49,4 @@ public class MusicPlayer {
         }
     }
 
-    public static class MusicThread extends Thread {
-
-        private boolean playing = true;
-
-        public boolean isPlaying() {
-            return playing;
-        }
-
-        public void setPlaying(boolean playing) {
-            this.playing = playing;
-        }        
-
-        @Override
-        public void run() {
-            MusicPlayer.play();
-            while(playing){
-                try {
-                    Thread.sleep(120000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-    }
 }
