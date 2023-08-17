@@ -19,7 +19,7 @@ public class MusicPlayer {
                 @Override
                 public void update(LineEvent event) {
                     if (event.getType() == LineEvent.Type.START) {
-                        System.out.println("Franco Califano - La mia libertà (1981)\n");
+                        System.out.println("\u001B[3mFranco Califano - La mia libertà (1981)\u001B[0m\n");
                     } else if (event.getType() == LineEvent.Type.STOP) {
                         clip.close();
                     }

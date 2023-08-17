@@ -1,9 +1,6 @@
 package JokerCasino;
 
-import JokerCasino.MusicPlayer;
-
 import java.util.Scanner;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,12 +36,11 @@ public class JokerCasino {
 
 
     public static void main(String[] args) {
-        String asciiArt = "█▀▄▀█ █▀█       █ █▀█ █▄▀ █▀▀ █▀█ ▀ █▀   █▀▀ ▄▀█ █▀ █ █▄ █ █▀█\n" +
-                          "█ ▀ █ █▀▄ ▄   █▄█ █▄█ █ █ ██▄ █▀▄   ▄█   █▄▄ █▀█ ▄█ █ █ ▀█ █▄█";
-        System.out.println(asciiArt);
+        System.out.println("\u001B[31m\u001B[1mMr. Joker's Casino \u001B[0m");
 
         Login();
-    
+
+
     }
 
 }
