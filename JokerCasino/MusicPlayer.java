@@ -1,4 +1,8 @@
 package JokerCasino;
+import java.io.File;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+
 import javax.sound.sampled.*;
 
 public class MusicPlayer {
@@ -8,7 +12,9 @@ public class MusicPlayer {
 
     public static void play() {
         try {
-            audioInputStream = AudioSystem.getAudioInputStream(MusicPlayer.class.getResource("/Varie/Franco Califano - La mia libertà.wav"));
+            Path path = FileSystems.getDefault().getPath("").toAbsolutePath();
+            File file = new File(path + "/Varie/Franco Califano - La mia libertà.wav");
+            audioInputStream = AudioSystem.getAudioInputStream(file);
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);
 
