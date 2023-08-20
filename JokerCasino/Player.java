@@ -1,34 +1,45 @@
 package JokerCasino;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Player {
 
-    private final String codiceFiscale;
-    private final Date dataDiNascita;
+    private String codiceFiscale;
+    private LocalDate dataDiNascita;
     private String nickname;
 
-    public Player(String codiceFiscale, Date dataDiNascita, String nickname) {
+    public Player() {
+    }
+
+    public Player(String codiceFiscale, LocalDate dataDiNascita) {
+        this.codiceFiscale = codiceFiscale;
+        this.dataDiNascita = dataDiNascita;
+    }
+
+    public Player(String codiceFiscale, LocalDate dataDiNascita, String nickname) {
         this.codiceFiscale = codiceFiscale;
         this.dataDiNascita = dataDiNascita;
         this.nickname = nickname;
-    }
-
-    public Player(String codiceFiscale, Date dataDiNascita) {
-        this.codiceFiscale = codiceFiscale;
-        this.dataDiNascita = dataDiNascita;
     }
 
     public String getCodiceFiscale() {
         return codiceFiscale;
     }
 
-    public Date getDataDiNascita() {
+    public LocalDate getDataDiNascita() {
         return dataDiNascita;
     }
 
     public String getNickname() {
         return nickname;
+    }
+
+    public void setCodiceFiscale(String codiceFiscale) {
+        this.codiceFiscale = codiceFiscale;
+    }
+
+    public void setDataDiNascita(LocalDate dataDiNascita) {
+        this.dataDiNascita = dataDiNascita;
     }
 
     public void setNickname(String nickname) {
