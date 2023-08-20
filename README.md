@@ -50,36 +50,11 @@ openssl pkcs12 -export -out joker.p12 -inkey joker_key.pem -in joker_cert.pem -n
 keytool -importkeystore -destkeystore joker_keystore.jks -srckeystore joker.p12 -srcstoretype PKCS12 -alias joker -srcstorepass aps2023 -deststorepass aps2023
 
 # Generazione del Truststore
-<!-- openssl x509 -in ms_cert.pem -out ms_cert.der -outform der
-openssl x509 -in andy_cert.pem -out andy_cert.der -outform der
-openssl x509 -in me_cert.pem -out me_cert.der -outform der
-openssl x509 -in joker_cert.pem -out joker_cert.der -outform der -->
-
-<!-- Trust Store Ministero della Salute -->
-keytool -import -v -trustcacerts -file andy_cert.pem -alias andy -keystore ms_truststore.jks -storepass aps2023
-keytool -import -v -trustcacerts -file joker_cert.pem -alias joker -keystore ms_truststore.jks -storepass aps2023
-keytool -import -v -trustcacerts -file me_cert.pem -alias me -keystore ms_truststore.jks -storepass aps2023
-
-<!-- Trust Store Andy -->
-keytool -import -v -trustcacerts -file ms_cert.pem -alias ms -keystore andy_truststore.jks -storepass aps2023
-keytool -import -v -trustcacerts -file joker_cert.pem -alias joker -keystore andy_truststore.jks -storepass aps2023
-keytool -import -v -trustcacerts -file me_cert.pem -alias me -keystore andy_truststore.jks -storepass aps2023
-
-<!-- Trust Store Mr. Joker -->
-keytool -import -v -trustcacerts -file ms_cert.pem -alias ms -keystore joker_truststore.jks -storepass aps2023
-keytool -import -v -trustcacerts -file andy_cert.pem -alias andy -keystore joker_truststore.jks -storepass aps2023
-
-<!-- Trust Store -->
-keytool -import -v -trustcacerts -file ms_cert.pem -alias ms -keystore truststore.jks -storepass aps2023
-keytool -import -v -trustcacerts -file andy_cert.pem -alias andy -keystore truststore.jks -storepass aps2023
-keytool -import -v -trustcacerts -file me_cert.pem -alias me -keystore truststore.jks -storepass aps2023
-keytool -import -v -trustcacerts -file joker_cert.pem -alias joker -keystore truststore.jks -storepass aps2023
-
-
 keytool -genkeypair -keyalg RSA -alias dummy -keystore mytruststore.jks -storepass aps2023 -dname "CN=dummy, OU=dummy, O=dummy, L=dummy, S=dummy, C=dummy" -validity 1
 keytool -delete -alias dummy -keystore mytruststore.jks -storepass aps2023
 
 keytool -importcert -file ms_cert.der -alias ms -keystore truststore.jks -storepass aps2023
 keytool -importcert -file me_cert.der -alias me -keystore truststore.jks -storepass aps2023
 
+<!-- Stampa del truststore.jks -->
 keytool -list -keystore truststore.jks -storepass aps2023
