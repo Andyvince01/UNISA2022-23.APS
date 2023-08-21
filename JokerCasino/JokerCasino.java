@@ -3,6 +3,9 @@ package JokerCasino;
 import JokerCasino.Autentication.SSLJoker;
 import JokerCasino.Autentication.SSLMS;
 import JokerCasino.Autentication.SSLPlayer;
+import JokerChain.JokerChain;
+import JokerChain.SSLADM;
+import JokerChain.SSLBanco;
 
 import java.util.Scanner;
 import java.nio.file.Files;
@@ -69,12 +72,12 @@ public class JokerCasino {
 
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws Exception {
         System.out.println("\u001B[41m\u001B[1m Mr. Joker's Casino \u001B[0m");
 
         // Riproduttore Musica
         MusicPlayer.play();
-        Thread.sleep(100);
+        Thread.sleep(1000);
 
         // Single Scanner instance for the entire program
         Scanner scanner = new Scanner(System.in);
@@ -88,21 +91,33 @@ public class JokerCasino {
             System.exit(0);
         }
 
-        // GIOCO
+        // // GIOCO
+        
 
-        // Scelta Nickname
-        System.out.print("Inserisci un nickname per la sala da gioco: ");
-        String nickname = scanner.nextLine();
-        if(nickname == null || nickname.trim().isEmpty())
-            p.setNickname(p.getCodiceFiscale());
-        else
-            p.setNickname(nickname);
+        // // Scelta Nickname
+        // System.out.print("Inserisci un nickname per la sala da gioco: ");
+        // String nickname = scanner.nextLine();
+        // if(nickname == null || nickname.trim().isEmpty())
+        //     p.setNickname(p.getCodiceFiscale());
+        // else
+        //     p.setNickname(nickname);
             
-        System.out.println(p.toString());
-    
-        // JokerChain
+        // System.out.println(p.toString());
+
+        // // JokerChain
+        // JokerChain jokerChain = new JokerChain(true);
+
+        // SSLADM sslAdm = new SSLADM("Certs/adm_keystore.jks", jokerChain);
+        // new Thread(() -> {
+        //     sslAdm.startConnection();
+        // }).start();
+
+        // Thread.sleep(1000);
+        // SSLBanco sslBanco = new SSLBanco("Certs/joker_keystore.jks");
+        // sslBanco.connectToADM();
 
         MusicPlayer.stop();
+
     }
     
 

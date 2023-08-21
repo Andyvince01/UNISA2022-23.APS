@@ -3,6 +3,7 @@ package JokerCasino.Autentication;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -10,24 +11,25 @@ import javax.net.ssl.TrustManagerFactory;
 
 public abstract class SSLBase {
 
-    protected static final String TRUSTSTOREPATH = "Certs/truststore.jks";
-    protected static final String PASSWORD = "aps2023";
-    protected SSLContext sslContext;
+    private static final String TRUSTSTOREPATH = "Certs/truststore.jks";
+    private static final String PASSWORD = "aps2023";
+    private SSLContext sslContext;
+    private KeyStore ks;
 
     public SSLBase(String keystorePath) throws Exception {
-        initializeSSLContext(keystorePath);
+        this.initializeSSLContext(keystorePath);
     }
 
-    protected void initializeSSLContext(String keystorePath) throws Exception {
+    private void initializeSSLContext(String keystorePath) throws Exception {
         // Carica il keystore
-        KeyStore ks = KeyStore.getInstance("JKS");
+        this.ks = KeyStore.getInstance("JKS");
         try (InputStream kis = new FileInputStream(keystorePath)) {
-            ks.load(kis, PASSWORD.toCharArray());
+            this.ks.load(kis, PASSWORD.toCharArray());
         }
 
         // Inizializza il KeyManagerFactory
-        KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-        kmf.init(ks, PASSWORD.toCharArray());
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        kmf.init(this.ks, PASSWORD.toCharArray());
 
         // Carica il truststore
         KeyStore ts = KeyStore.getInstance("JKS");
@@ -35,7 +37,7 @@ public abstract class SSLBase {
             ts.load(tis, PASSWORD.toCharArray());
         }
 
-        TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         tmf.init(ts);
 
         // Crea e inizializza il SSLContext
@@ -46,4 +48,9 @@ public abstract class SSLBase {
     public SSLContext getSslContext() {
         return sslContext;
     }
+
+    public KeyStore getKs() throws KeyStoreException {
+        return this.ks;
+    }
+
 }

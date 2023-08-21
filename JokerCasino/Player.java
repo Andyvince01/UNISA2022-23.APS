@@ -1,5 +1,6 @@
 package JokerCasino;
 
+import java.security.KeyPair;
 import java.time.LocalDate;
 
 public class Player {
@@ -7,7 +8,8 @@ public class Player {
     private String codiceFiscale;
     private LocalDate dataDiNascita;
     private String nickname;
-
+    private KeyPair keyPair;
+    
     public Player() {
     }
 
@@ -46,11 +48,18 @@ public class Player {
         this.nickname = nickname;
     }
 
+    public KeyPair getKeyPair() {
+        return keyPair;
+    }
+
+    public void setKeyPair(KeyPair keyPair) {
+        this.keyPair = keyPair;
+    }     
+
     @Override
     public String toString() {
         return "Player [codiceFiscale=" + codiceFiscale + ", dataDiNascita=" + dataDiNascita + ", nickname=" + nickname
                 + "]";
-    } 
+    }
 
-    
 }

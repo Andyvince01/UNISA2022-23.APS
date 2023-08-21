@@ -7,7 +7,7 @@ import javax.net.ssl.*;
 
 public class SSLPlayer extends SSLBase implements SSLClientServer{
 
-    private static final int PORT = 4002; 
+    private static final int PORT = 3999; 
     private static final String MS_HOST = "localhost";
     private static final int MS_PORT = 4000; 
     private String response;
@@ -21,8 +21,9 @@ public class SSLPlayer extends SSLBase implements SSLClientServer{
     @Override
     public void startConnection() {
         try {
-            SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+            SSLServerSocketFactory ssf = this.sslContext.getServerSocketFactory();
             SSLServerSocket serverSocket = (SSLServerSocket) ssf.createServerSocket(PORT);
+            serverSocket.setNeedClientAuth(true);
 
             System.out.println("\u001B[32m(SSLPlayer) In attesa di connessioni ...\u001B[0m");
             SSLSocket socket = (SSLSocket) serverSocket.accept();

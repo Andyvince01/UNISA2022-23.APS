@@ -15,11 +15,11 @@ import javax.net.ssl.SSLSocketFactory;
 
 import JokerCasino.Player;
 
-public class SSLJoker implements SSLClientServer {
+public class SSLJoker extends SSLBase implements SSLClientServer {
 
     private static final String TRUSTSTOREPATH = "Certs/truststore.jks";
     private static final int PORT = 4001;
-    private static final int PLAYER_PORT = 4002; 
+    private static final int PLAYER_PORT = 3999; 
     private static final String PLAYER_HOST = "localhost";
     private static final String PASSWORD = "aps2023";
     private String message = "";
@@ -28,26 +28,16 @@ public class SSLJoker implements SSLClientServer {
     private Player p;
 
     public SSLJoker(String keystorePath, Player p) throws Exception {
-
-        System.setProperty("javax.net.ssl.keyStore", keystorePath);
-        System.setProperty("javax.net.ssl.keyStorePassword", PASSWORD);
-
-        System.setProperty("javax.net.ssl.trustStore", TRUSTSTOREPATH);
-        System.setProperty("javax.net.ssl.trustStorePassword", PASSWORD);
-
-        // Crea e inizializza il SSLContext
-        sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(null, null, null);
-
+        super(keystorePath);
+        this.sslContext = getSslContext();
         this.p = p;
-
     }
     
     @Override
     public void startConnection() {
         
         try {
-            SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+            SSLServerSocketFactory ssf = this.sslContext.getServerSocketFactory();
             SSLServerSocket serverSocket = (SSLServerSocket) ssf.createServerSocket(PORT);
             serverSocket.setNeedClientAuth(true);
 

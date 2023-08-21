@@ -32,7 +32,7 @@ public class SSLMS extends SSLBase implements SSLClientServer{
     @Override
     public void startConnection() {
         try {
-            SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+            SSLServerSocketFactory ssf = this.sslContext.getServerSocketFactory();
             SSLServerSocket serverSocket = (SSLServerSocket) ssf.createServerSocket(PORT);
             serverSocket.setNeedClientAuth(true);
 
