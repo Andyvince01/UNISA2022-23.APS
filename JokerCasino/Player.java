@@ -9,7 +9,11 @@ public class Player {
     private LocalDate dataDiNascita;
     private String nickname;
     private KeyPair keyPair;
-    
+
+    public Player(String nickname) {
+        this.nickname = nickname;
+    }
+
     public Player() {
     }
 

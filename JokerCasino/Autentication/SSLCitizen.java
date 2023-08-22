@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 
 import javax.net.ssl.*;
 
-public class SSLPlayer extends SSLBase implements SSLClientServer{
+public class SSLCitizen extends SSLBase implements SSLClientServer{
 
     private static final int PORT = 3999; 
     private static final String MS_HOST = "localhost";
@@ -13,7 +13,7 @@ public class SSLPlayer extends SSLBase implements SSLClientServer{
     private String response;
     private SSLContext sslContext;
 
-    public SSLPlayer(String keystorePath) throws Exception {
+    public SSLCitizen(String keystorePath) throws Exception {
         super(keystorePath);
         this.sslContext = getSslContext();
     }

@@ -1,12 +1,12 @@
-package JokerChain;
+package JokerChain.Utils;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
 
-public class KeyPairRSAGenerator {
+public class Generator {
 
-    public static KeyPair generate() {
+    public static KeyPair generateKeyPair() {
         try {
             SecureRandom secureRandom = new SecureRandom();
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
@@ -18,4 +18,12 @@ public class KeyPairRSAGenerator {
             return null;
         }
     }
+
+    public static byte[] generatePRG() {
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] randomBytes = new byte[32];
+        secureRandom.nextBytes(randomBytes); 
+        return randomBytes;           
+    }
+
 }

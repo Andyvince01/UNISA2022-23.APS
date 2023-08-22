@@ -28,7 +28,7 @@ public class JokerChain {
                     String sender = parts[4];
                     transactions.add(new Transaction(id, type, data, hash, sender));
                 }
-                currentID = transactions.get(transactions.size() - 1).getId();
+                currentID = transactions.get(transactions.size() - 1).getId() + 1;
                 if(!this.checkGenesis())
                     throw new Exception("Errore: è presente più di un blocco genesis!");
             }
@@ -42,11 +42,10 @@ public class JokerChain {
     }
 
     public void addTransaction(Transaction transaction) throws IOException {
-        if (transaction.getType() == 5 || transaction.getType() == 2) {
-            currentID++;
-        }
         transaction.setId(currentID);
         transactions.add(transaction);
+        if (transaction.getType() == 5)
+            currentID++;
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(blockchainFile, true))) {
             writer.write(transaction.toCSV());
             writer.newLine();
@@ -55,7 +54,6 @@ public class JokerChain {
 
     public String calculateMerkleRootForType(int type) throws Exception {
         List<Transaction> transactionsOfType = filterTransaction(type, this.currentID);
-
         List<String> hashes = transactionsOfType.stream()
                                 .map(Transaction::getHash)
                                 .collect(Collectors.toList());
@@ -66,8 +64,9 @@ public class JokerChain {
     public void createGenesisBlock(PublicKey admPublicKey, PublicKey jokerPublicKey) throws IOException {
         String admPK = Base64.getEncoder().encodeToString(admPublicKey.getEncoded());
         String jokerPK = Base64.getEncoder().encodeToString(jokerPublicKey.getEncoded());
-        this.addTransaction(new Transaction(0, admPK, "ADM"));
-        this.addTransaction(new Transaction(0, jokerPK, "Joker"));
+        this.addTransaction(new Transaction(1, admPK, "ADM"));
+        this.addTransaction(new Transaction(1, jokerPK, "Joker"));
+        this.currentID++;
     }
 
     public List<Transaction> getTransactions() {
@@ -103,7 +102,7 @@ public class JokerChain {
     private List<Transaction> filterTransaction(int type, int id){
         List<Transaction> transactionsOfType = new ArrayList<Transaction>();
         transactionsOfType = this.transactions.stream()
-                                .filter(t -> t.getType() == type)
+                                .filter(t -> t.getType() == type && t.getId() == id)
                                 .collect(Collectors.toList());
         return transactionsOfType;
     }

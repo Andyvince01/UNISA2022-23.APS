@@ -2,10 +2,11 @@ package JokerCasino;
 
 import JokerCasino.Autentication.SSLJoker;
 import JokerCasino.Autentication.SSLMS;
-import JokerCasino.Autentication.SSLPlayer;
+import JokerCasino.Autentication.SSLCitizen;
 import JokerChain.JokerChain;
 import JokerChain.SSLADM;
 import JokerChain.SSLBanco;
+import JokerChain.SSLPlayer;
 
 import java.util.Scanner;
 import java.nio.file.Files;
@@ -52,7 +53,7 @@ public class JokerCasino {
             }).start();
         
             // Creare l'istanza di SSLPlayer
-            SSLPlayer sslPlayer = new SSLPlayer(player_cert);
+            SSLCitizen sslPlayer = new SSLCitizen(player_cert);
 
             Thread.sleep(1000);
             sslPlayer.connectToMS();           // Port 4000 → IdP MS
@@ -91,34 +92,41 @@ public class JokerCasino {
             System.exit(0);
         }
 
-        // // GIOCO
-        
+        // GIOCO
 
-        // // Scelta Nickname
-        // System.out.print("Inserisci un nickname per la sala da gioco: ");
-        // String nickname = scanner.nextLine();
-        // if(nickname == null || nickname.trim().isEmpty())
-        //     p.setNickname(p.getCodiceFiscale());
-        // else
-        //     p.setNickname(nickname);
+        // Scelta Nickname
+        System.out.print("Inserisci un nickname per la sala da gioco: ");
+        String nickname = scanner.nextLine();
+        if(nickname == null || nickname.trim().isEmpty())
+            p.setNickname(p.getCodiceFiscale());
+        else
+            p.setNickname(nickname);
             
-        // System.out.println(p.toString());
+        System.out.println(p.toString() + "\n");
 
-        // // JokerChain
-        // JokerChain jokerChain = new JokerChain(true);
+        // JokerChain
+        JokerChain jokerChain = new JokerChain(false);
 
-        // SSLADM sslAdm = new SSLADM("Certs/adm_keystore.jks", jokerChain);
-        // new Thread(() -> {
-        //     sslAdm.startConnection();
-        // }).start();
+        // Istanze
+        SSLADM sslAdm = new SSLADM("Certs/adm_keystore.jks", jokerChain);
+        SSLBanco sslBanco = new SSLBanco("Certs/joker_keystore.jks", new Player("Banco"), jokerChain);
+        SSLPlayer sslPlayer = new SSLPlayer(p);
 
-        // Thread.sleep(1000);
-        // SSLBanco sslBanco = new SSLBanco("Certs/joker_keystore.jks");
-        // sslBanco.connectToADM();
+        // Generazione Blocco Genesi
+        new Thread(() -> {
+            sslAdm.startConnection();
+        }).start();
 
-        MusicPlayer.stop();
+        new Thread(() -> {
+            sslBanco.connectTo(sslAdm);
+        }).start();
 
-    }
-    
+        Thread.sleep(100);
+
+        new Thread(() -> {
+            sslPlayer.connectTo(sslAdm);
+        }).start();
+
+    }   
 
 }
