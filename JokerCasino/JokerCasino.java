@@ -15,7 +15,14 @@ import java.nio.file.Paths;
 
 public class JokerCasino {
 
-    public static boolean Login(Player p, Scanner scanner) throws InterruptedException{
+    /**
+     * Tale metodo permette di poter effettuare il login per accedere ai servizi della Sala Bingo di Mr. Joker.
+     * @param p - Istanza del giocatore che vuole effettuare l'accesso.
+     * @param scanner - Istanza di un semplice oggetto scanner che permette di poter richiedere input a linea di comando.
+     * @return Un valore booleano che indica se il giocatore può partecipare o meno ai servizi della Sala Bingo.
+     * @throws Exception - Lancia un'eccezione nel caso di problemi durante la fase di autenticazione.
+     */
+    public static boolean Login(Player p, Scanner scanner) throws Exception{
 
         String player_cert = "";
 
@@ -34,41 +41,34 @@ public class JokerCasino {
         }while(!flag);      
 
         // Procedura di Autenticazione
-        try {
-            // System.setProperty("javax.net.debug", "ssl:handshake");
+        // System.setProperty("javax.net.debug", "ssl:handshake");
 
-            // Creare l'istanza di SSLMSIdP
-            SSLMS sslMS = new SSLMS("Certs/ms_keystore.jks");
+        // Creare l'istanza di SSLMSIdP
+        SSLMS sslMS = new SSLMS("Certs/ms_keystore.jks");
 
-            new Thread(() -> {
-                sslMS.startConnection();
-            }).start();
+        new Thread(() -> {
+            sslMS.startConnection();
+        }).start();
 
-            // Creare l'istanza di SSLJoker
-            SSLJoker sslJoker = new SSLJoker("Certs/joker_keystore.jks", p);
+        // Creare l'istanza di SSLJoker
+        SSLJoker sslJoker = new SSLJoker("Certs/joker_keystore.jks", p);
 
-            new Thread(() -> {
-                sslJoker.startConnection();
-            }).start();
-        
-            // Creare l'istanza di SSLPlayer
-            SSLCitizen sslPlayer = new SSLCitizen(player_cert);
+        new Thread(() -> {
+            sslJoker.startConnection();
+        }).start();
+    
+        // Creare l'istanza di SSLPlayer
+        SSLCitizen sslPlayer = new SSLCitizen(player_cert);
 
-            Thread.sleep(1000);
-            sslPlayer.connectToMS();           // Port 4000 → IdP MS
+        Thread.sleep(1000);
+        sslPlayer.connectToMS();           // Port 4000 → IdP MS
 
-            new Thread(() -> {
-                sslPlayer.startConnection();
-            }).start();
+        new Thread(() -> {
+            sslPlayer.startConnection();
+        }).start();
 
-            Thread.sleep(1000);
-            return !p.equals(null) ? true : false;
-
-        }catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }            
-
+        Thread.sleep(1000);
+        return sslPlayer.isAuthorized();
     }
 
     public static void main(String[] args) throws Exception {
@@ -81,16 +81,15 @@ public class JokerCasino {
         // Single Scanner instance for the entire program
         Scanner scanner = new Scanner(System.in);
     
-        // LOGIN
+        /* LOGIN */
         Player p = new Player();
         boolean authorized = Login(p, scanner);  // Pass the scanner to the Login method if required
-    
-        if(!authorized){
-            System.out.println("Accesso non autorizzato. Terminazione del programma.");
+        
+        // Accesso Negato
+        if(!authorized)
             System.exit(0);
-        }
 
-        // GIOCO
+        /* GIOCO */
 
         // Scelta Nickname
         System.out.print("Inserisci un nickname per la sala da gioco: ");
@@ -103,9 +102,9 @@ public class JokerCasino {
         System.out.println("Benvenuto "+ p.getNickname() + "\n");
 
         // JokerChain
-        JokerChain jokerChain = new JokerChain(true);
+        JokerChain jokerChain = new JokerChain(false);
 
-        // Istanze
+        // Generazione Istanze del nodo ADM, del banco e dei giocatori.
         SSLADM sslAdm = new SSLADM("Certs/adm_keystore.jks", jokerChain);
         SSLBanco sslBanco = new SSLBanco("Certs/joker_keystore.jks", new Player("Banco"), jokerChain);
         SSLPlayer sslPlayer = new SSLPlayer(p);

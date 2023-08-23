@@ -6,14 +6,19 @@ public class Giocata {
 
     private String numero;
     private String colore;
-    private String parita;
+    private String pariDispari;
     private String bit;
-    private static Hashtable<String, String> hashtable = new Hashtable<String, String>();
 
-    public Giocata(String numero, String colore, String parita) throws Exception {
+    /**
+     * Metodo costruttore di Giocata.
+     * @param numero
+     * @param colore
+     * @param pariDispari
+     */
+    public Giocata(String numero, String colore, String pariDispari) {
         this.numero = numero;
         this.colore = colore;
-        this.parita = parita;
+        this.pariDispari = pariDispari;
         this.bit = this.toBit();
     }
 
@@ -25,28 +30,40 @@ public class Giocata {
         return colore;
     }
 
-    public String getParita() {
-        return parita;
+    public String getpariDispari() {
+        return pariDispari;
     }
 
     public String getBit() {
         return bit;
     }
 
-    public String toBit() throws Exception{
+    /**
+     * Permette di poter rappresentare una giocata in termini di bit. In totale, si hanno 11 bit, di cui il primo, l'ottavo e il decimo
+     * sono bit di soglia che servono a stabilire se il giocatore ha effettuato rispettivamente una giocata su 'numero', 'colore' e
+     * 'pariDispari'.
+     * @return Stringa che rappresenta la giocata in termini di bit.
+     * @throws Exception
+     */
+    public String toBit(){
         String sogliaNumero = (this.numero.isEmpty() == false)? "1" : "0";
         String numero = (sogliaNumero == "1") ? Integer.toBinaryString(Integer.valueOf(this.numero)) : "000000";
         String sogliaColore = (this.colore.isEmpty() == false)? "1" : "0";
         String colore = (sogliaColore == "1") ? (this.colore.equals("rosso")? "1" : (this.colore.equals("nero")? "0" : null)) : "0";
-        String sogliaParita = (this.parita.isEmpty() == false)? "1" : "0";
-        String parita = (sogliaParita == "1") ? ((this.parita.equals("pari"))? "1" : (this.parita.equals("dispari")? "0" : null)) : "0";
+        String sogliaPariDispari = (this.pariDispari.isEmpty() == false)? "1" : "0";
+        String pariDispari = (sogliaPariDispari == "1") ? ((this.pariDispari.equals("pari"))? "1" : (this.pariDispari.equals("dispari")? "0" : null)) : "0";
 
         while(numero.length() != 6)
             numero = "0" + numero;
 
-        return sogliaNumero + numero + sogliaColore + colore + sogliaParita + parita;
+        return sogliaNumero + numero + sogliaColore + colore + sogliaPariDispari + pariDispari;
     }
 
+    /**
+     * Tale metodo permette di poter ricavare i parametri (numero | colore | pariDispari) a partire da una giocata espressa in bit.
+     * @param g - Giocata espressa in bit.
+     * @return Parametri (numero | colore | pariDispari) della giocata 'g'.
+     */
     public static String fromString(String g){
         String numero, colore, pariDispari;
         if(String.valueOf(g.charAt(0)).equals("0"))
@@ -71,6 +88,10 @@ class Roulette{
     
     static Hashtable<String, String> hashtable = new Hashtable<String, String>();
 
+    /**
+     * Metodo Costruttore di Roulette. Crea un Hash Table che associa ad ogni numero della roulette un colore.
+     * Per semplicità, abbiamo considerato lo zero di colore nero, sebbene sia di colore verde.
+     */
     public Roulette(){
         hashtable.put("0", "nero");
         hashtable.put("1", "rosso");
@@ -111,7 +132,13 @@ class Roulette{
         hashtable.put("36", "rosso");
     }
 
-    public String esito(String risultato, String g) throws Exception{
+    /**
+     * Tale metodo permette di poter stabilire se la giocata 'g' di un giocatore è risultate Vincente o Perdente.
+     * @param risultato - Risultato estratto dal nodo banco.
+     * @param g - Giocata di un giocatore.
+     * @return Stringa che indica l'esito della giocata: Vincente o Perdente.
+     */
+    public String esito(String risultato, String g){
         // Giocata
         String[] gString = Giocata.fromString(g).split(","); 
         // Risultato

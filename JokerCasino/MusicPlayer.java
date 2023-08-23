@@ -10,6 +10,9 @@ public class MusicPlayer {
     private static Clip clip;
     private static AudioInputStream audioInputStream;
 
+    /**
+     * Esegue in loop la canzone al path predefinito.
+     */
     public static void play() {
         try {
             Path path = FileSystems.getDefault().getPath("").toAbsolutePath();
@@ -42,12 +45,19 @@ public class MusicPlayer {
         }
     }
 
+    /**
+     * Ferma l'esecuzione della canzone.
+     */
     public static void stop() {
         if (clip != null && clip.isRunning()) {
             clip.stop();
         }
     }
 
+    /**
+     * Permette di impostare il volume della canzone.
+     * @param volume - Indica di quanto impostare il volume.
+     */
     public static void setVolume(float volume) {
         if (clip != null && clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);

@@ -19,6 +19,12 @@ public class SSLJoker extends SSLBase {
     private SSLContext sslContext;
     private Player p;
 
+    /**
+     * Costruttore di SSLJoker.
+     * @param keystorePath - Path al keystore del Fornitore di Servizi (Mr. Joker).
+     * @param p - Istanza della classe Player
+     * @throws Exception Lancia un'eccezione in caso di errori durante la fase di autenticazione.
+     */
     public SSLJoker(String keystorePath, Player p) throws Exception {
         super(keystorePath);
         this.sslContext = getSslContext();
@@ -65,28 +71,28 @@ public class SSLJoker extends SSLBase {
                 this.p.setCodiceFiscale(codiceFiscale);
                 this.p.setDataDiNascita(dataDiNascita);
             }
-            else{
+            else
                 response = "Accesso Negato. Il gioco è vietato per i minori di 18 anni!";
-                this.p = new Player();
-            }
+
             sendData(socket, response);            
             socket.close();
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(0);
         }
 
     }
 
+    /**
+     * Metodo per determinare se un dato player è maggiorenne o meno.
+     * @param dataDiNascita - Data di nascita del Player.
+     * @return 'true' se e solo se il player è maggiorenne. Altrimenti, restituisce 'false'.
+     */
     private static boolean isMaggiorenne(LocalDate dataDiNascita) {
-
         LocalDate oggi = LocalDate.now();
-    
         Period periodo = Period.between(dataDiNascita, oggi);
-        
         return periodo.getYears() >= 18;
     }
-
-
 
 }

@@ -25,6 +25,12 @@ public class SSLADM extends SSLBase{
     private CountDownLatch countDownLatch;
     private static final Semaphore inputSemaphore = new Semaphore(1);
 
+    /**
+     * Costruttore di SSLADM.
+     * @param keystorePath - Path al keystore del nodo ADM.
+     * @param jokerChain - Istanza della JokerChain.
+     * @throws Exception Lancia un'eccezione nel caso di errori durante la fase di connessione.
+     */
     public SSLADM(String keystorePath, JokerChain jokerChain) throws Exception {
         super(keystorePath);
         this.sslContext = getSslContext();
@@ -33,6 +39,10 @@ public class SSLADM extends SSLBase{
         this.countDownLatch = new CountDownLatch(4);
     }
 
+    /**
+     * Inizializza la connessione del nodo ADM. Una volta configurata, qualunque peer, anche coloro sprovvisti di certificato,
+     * possono connettersi al nodo ADM. 
+     */
     public void startConnection() {
         try {
             SSLServerSocketFactory ssf = this.sslContext.getServerSocketFactory();
@@ -52,6 +62,10 @@ public class SSLADM extends SSLBase{
         }
     }
 
+    /**
+     * Per ogni peer connesso alla sua socket, vengono eseguite le operazioni di generazione dei blocchi della JokerChain.
+     * @param socket - Istanza di socket.
+     */
     public void handleClientConnection(SSLSocket socket) {
         try{
             String client = (String) SSLConnection.receiveData(socket);
