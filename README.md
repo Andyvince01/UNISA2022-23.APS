@@ -11,8 +11,8 @@
 `openssl genpkey -paramfile prime256v1.pem -out adm_key.pem`
 
 <!-- Altri Player -->
-openssl genpkey -paramfile prime256v1.pem -out mario_key.pem
-openssl genpkey -paramfile prime256v1.pem -out infante_key.pem
+`openssl genpkey -paramfile prime256v1.pem -out mario_key.pem`
+`openssl genpkey -paramfile prime256v1.pem -out infante_key.pem`
 
 # Generazione certificati self-signed
 `openssl req -new -x509 -days 365 -key ms_key.pem -out ms_cert.pem -config "C:\msys64\mingw64\etc\ssl\opensslGP.cnf"`
@@ -32,21 +32,15 @@ openssl genpkey -paramfile prime256v1.pem -out infante_key.pem
 `cp me_cert.pem ME`
 
 # Generazione Richiesta GP2.0
-<<<<<<< HEAD
-openssl req -new -key andy_key.pem -out andy_request.pem -config "C:\msys64\mingw64\etc\ssl\opensslGP.cnf"
-openssl ca -in andy_request.pem -out andy_cert.pem -policy policy_anything -config "C:\msys64\mingw64\etc\ssl\opensslGP.cnf"
-=======
 `openssl req -new -key andy_key.pem -out andy_request.pem -config "C:\msys64\mingw64\etc\ssl\opensslGP.cnf"`
-
 `openssl ca -in andy_request.pem -out andy_cert.pem -policy policy_anything -config "C:\msys64\mingw64\etc\ssl\opensslGP.cnf"`
->>>>>>> 9167900f0630631988a03cb99cbcc3a96c074322
 
 <!-- Altri Player -->
-openssl req -new -key mario_key.pem -out mario_request.pem -config "C:\msys64\mingw64\etc\ssl\opensslGP.cnf"
-openssl ca -in mario_request.pem -out mario_cert.pem -policy policy_anything -config "C:\msys64\mingw64\etc\ssl\opensslGP.cnf" -startdate 230820120000Z -enddate 230822120000Z
+`openssl req -new -key mario_key.pem -out mario_request.pem -config "C:\msys64\mingw64\etc\ssl\opensslGP.cnf"`
+`openssl ca -in mario_request.pem -out mario_cert.pem -policy policy_anything -config "C:\msys64\mingw64\etc\ssl\opensslGP.cnf" -startdate 230820120000Z -enddate 230822120000Z`
 
-openssl req -new -key infante_key.pem -out infante_request.pem -config "C:\msys64\mingw64\etc\ssl\opensslGP.cnf"
-openssl ca -in infante_request.pem -out infante_cert.pem -policy policy_anything -config "C:\msys64\mingw64\etc\ssl\opensslGP.cnf" 
+`openssl req -new -key infante_key.pem -out infante_request.pem -config "C:\msys64\mingw64\etc\ssl\opensslGP.cnf"`
+`openssl ca -in infante_request.pem -out infante_cert.pem -policy policy_anything -config "C:\msys64\mingw64\etc\ssl\opensslGP.cnf"`
 
 # Generazione Richiesta Certificato Mr.Joker's Casino e Nodo ADM
 `openssl req -new -key joker_key.pem -out joker_request.pem -config "C:\msys64\mingw64\etc\ssl\opensslME.cnf"`
@@ -73,26 +67,18 @@ openssl ca -in infante_request.pem -out infante_cert.pem -policy policy_anything
 `keytool -importkeystore -destkeystore adm_keystore.jks -srckeystore adm.p12 -srcstoretype PKCS12 -alias adm -srcstorepass aps2023 -deststorepass aps2023`
 
 <!-- Altri Player -->
-openssl pkcs12 -export -out mario.p12 -inkey mario_key.pem -in mario_cert.pem -name mario -passout pass:aps2023
-keytool -importkeystore -destkeystore mario_keystore.jks -srckeystore mario.p12 -srcstoretype PKCS12 -alias mario -srcstorepass aps2023 -deststorepass aps2023
+`openssl pkcs12 -export -out mario.p12 -inkey mario_key.pem -in mario_cert.pem -name mario -passout pass:aps2023`
+`keytool -importkeystore -destkeystore mario_keystore.jks -srckeystore mario.p12 -srcstoretype PKCS12 -alias mario -srcstorepass aps2023 -deststorepass aps2023`
 
-openssl pkcs12 -export -out infante.p12 -inkey infante_key.pem -in infante_cert.pem -name infante -passout pass:aps2023
-keytool -importkeystore -destkeystore infante_keystore.jks -srckeystore infante.p12 -srcstoretype PKCS12 -alias infante -srcstorepass aps2023 -deststorepass aps2023
+`openssl pkcs12 -export -out infante.p12 -inkey infante_key.pem -in infante_cert.pem -name infante -passout pass:aps2023`
+`keytool -importkeystore -destkeystore infante_keystore.jks -srckeystore infante.p12 -srcstoretype PKCS12 -alias infante -srcstorepass aps2023 -deststorepass aps2023`
 
 # Generazione del Truststore
 `keytool -genkeypair -keyalg RSA -alias dummy -keystore truststore.jks -storepass aps2023 -dname "CN=dummy, OU=dummy, O=dummy, L=dummy, S=dummy, C=dummy" -validity 1`
 `keytool -delete -alias dummy -keystore truststore.jks -storepass aps2023`
 
-<<<<<<< HEAD
-keytool -importcert -file ms_cert.pem -alias ms -keystore truststore.jks -storepass aps2023
-keytool -importcert -file me_cert.pem -alias me -keystore truststore.jks -storepass aps2023
-
-<!-- Stampa del truststore.jks -->
-keytool -list -keystore truststore.jks -storepass aps2023
-=======
-`keytool -importcert -file ms_cert.der -alias ms -keystore truststore.jks -storepass aps2023`
-`keytool -importcert -file me_cert.der -alias me -keystore truststore.jks -storepass aps2023`
+`keytool -importcert -file ms_cert.pem -alias ms -keystore truststore.jks -storepass aps2023`
+`keytool -importcert -file me_cert.pem -alias me -keystore truststore.jks -storepass aps2023`
 
 <!-- Stampa del truststore.jks -->
 `keytool -list -keystore truststore.jks -storepass aps2023`
->>>>>>> 9167900f0630631988a03cb99cbcc3a96c074322
