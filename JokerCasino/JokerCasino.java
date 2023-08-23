@@ -4,6 +4,7 @@ import JokerCasino.Autentication.SSLJoker;
 import JokerCasino.Autentication.SSLMS;
 import JokerCasino.Autentication.SSLCitizen;
 import JokerChain.JokerChain;
+import JokerChain.Player;
 import JokerChain.SSLADM;
 import JokerChain.SSLBanco;
 import JokerChain.SSLPlayer;
@@ -26,12 +27,10 @@ public class JokerCasino {
             else
                 System.out.print("Errore! Per poter accedere, inserisca un path valido: ");
             player_cert = scanner.nextLine();
-            if (Files.exists(Paths.get(player_cert))){
-                flag = true;
-                System.out.println();
-            }
-            else   
+            if (!Files.exists(Paths.get(player_cert)) || player_cert == "")
                 flag = false;
+            else   
+                flag = true;
         }while(!flag);      
 
         // Procedura di Autenticazione
@@ -63,8 +62,7 @@ public class JokerCasino {
             }).start();
 
             Thread.sleep(1000);
-
-            return sslPlayer.getResponse().startsWith("Accesso Consentito") ? true : false;
+            return !p.equals(null) ? true : false;
 
         }catch (Exception e) {
             e.printStackTrace();
@@ -102,29 +100,39 @@ public class JokerCasino {
         else
             p.setNickname(nickname);
             
-        System.out.println(p.toString() + "\n");
+        System.out.println("Benvenuto "+ p.getNickname() + "\n");
 
         // JokerChain
-        JokerChain jokerChain = new JokerChain(false);
+        JokerChain jokerChain = new JokerChain(true);
 
         // Istanze
         SSLADM sslAdm = new SSLADM("Certs/adm_keystore.jks", jokerChain);
         SSLBanco sslBanco = new SSLBanco("Certs/joker_keystore.jks", new Player("Banco"), jokerChain);
         SSLPlayer sslPlayer = new SSLPlayer(p);
+        SSLPlayer sslPlayerAlice = new SSLPlayer(new Player("Alice"));
+        SSLPlayer sslPlayerBob = new SSLPlayer(new Player("Bob"));
 
-        // Generazione Blocco Genesi
         new Thread(() -> {
             sslAdm.startConnection();
         }).start();
 
         new Thread(() -> {
-            sslBanco.connectTo(sslAdm);
+            sslBanco.connectTo(sslAdm, new Player("Banco").getNickname());
         }).start();
 
         Thread.sleep(100);
-
         new Thread(() -> {
-            sslPlayer.connectTo(sslAdm);
+            sslPlayer.connectTo(sslAdm, p.getNickname());
+        }).start();
+
+        Thread.sleep(100);
+        new Thread(() -> {
+            sslPlayerAlice.connectTo(sslAdm, "Alice");
+        }).start();
+
+        Thread.sleep(100);
+        new Thread(() -> {
+            sslPlayerBob.connectTo(sslAdm, "Bob");
         }).start();
 
     }   

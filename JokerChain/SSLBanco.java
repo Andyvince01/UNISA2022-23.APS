@@ -1,83 +1,80 @@
 package JokerChain;
 
-import JokerCasino.Player;
-import JokerCasino.Autentication.SSLBase;
 import JokerChain.Utils.Generator;
-import JokerChain.Utils.SocketUtils;
+import JokerChain.Utils.SSLConnection;
 
 import java.math.BigInteger;
-import javax.net.ssl.SSLContext;
+import java.security.KeyPair;
 import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
 
-public class SSLBanco extends SSLBase{
+public class SSLBanco extends SSLConnection{
 
-    // private static final int PORT = 4001;
-    private static final int ADM_PORT = 4002; 
-    private static final String ADM_HOST = "localhost";
     private Player banco;
     private JokerChain jokerChain;
-    private SSLContext sslContext;
 
     /**
-     * Metodo Costruttore
-     * @param keystorePath - Path al keystore del banco, contenente il certificato (joker_cert.pem) e la relativa chiave privata.
-     * @param banco - Istanza della classe Player, che rappresenta il banco di gioco.
-     * @param jokerChain - Istanza della JokerChain.
-     * @throws Exception
+     * Costruttore di SSLBanco. Inizializza un nuovo oggetto SSLBanco con un percorso del keystore, 
+     * un'istanza di Player e un'istanza di JokerChain.
+     * 
+     * @param keystorePath Il percorso del keystore da utilizzare per la connessione SSL.
+     * @param banco L'istanza del Player che rappresenta il banco.
+     * @param jokerChain L'istanza di JokerChain associata a questo SSLBanco.
+     * @throws Exception Se si verifica un errore durante l'inizializzazione.
      */
     public SSLBanco(String keystorePath, Player banco, JokerChain jokerChain) throws Exception {
         super(keystorePath);
-        this.sslContext = getSslContext();
         this.banco = banco;
         this.jokerChain = jokerChain;
     }
 
-    public void connectTo(SSLADM ssladm) {
-        try {
-            SSLSocketFactory ssf = this.sslContext.getSocketFactory();
-            SSLSocket socket = (SSLSocket) ssf.createSocket(ADM_HOST, ADM_PORT);
-            socket.startHandshake();
-
-            // Connessione
-            SocketUtils.sendData(socket, this.banco.getNickname());
-            
-            // Blocco Chiavi
-            this.banco.setKeyPair(Generator.generateKeyPair());
-            SocketUtils.sendData(socket, this.banco.getKeyPair().getPublic());
-            ssladm.awaitCompletion();
-
-            // Blocco Giocate
-            SocketUtils.sendData(socket, null);
-            ssladm.awaitCompletion();
-
-            // Blocco Stringhe Casuali
-            byte[] prng = Generator.generatePRG();
-            byte[] signedPrng = signData(prng, this.banco.getKeyPair().getPrivate());
-            SocketUtils.sendData(socket, prng);
-            SocketUtils.sendData(socket, signedPrng);
-            ssladm.awaitCompletion();
-
-            // Blocco Risultato
-            String merkleRoot = this.jokerChain.calculateMerkleRootForType(4);
-            String risultato = String.valueOf(new BigInteger(merkleRoot, 16).mod(new BigInteger("37")).intValue());
-            byte[] signedRisultato = signData(risultato.getBytes(), this.banco.getKeyPair().getPrivate());
-            SocketUtils.sendData(socket, risultato);
-            SocketUtils.sendData(socket, signedRisultato);
-
-            socket.close();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();            
-        }
-    }
-
+    /**
+     * Restituisce l'istanza del Player associata a questo SSLBanco.
+     * 
+     * @return L'istanza del Player 'banco'.
+     */
     public Player getBanco() {
         return banco;
     }
 
+    /**
+     * Imposta un'istanza del Player per questo SSLBanco.
+     * 
+     * @param p - L'istanza del Player 'banco' da impostare.
+     */
     public void setBanco(Player banco) {
         this.banco = banco;
+    }
+
+    @Override
+    protected void handleChiavi(SSLSocket socket, SSLADM ssladm) throws Exception {
+        KeyPair keyPair = Generator.generateKeyPair();
+        this.banco.setKeyPair(keyPair);
+        SSLConnection.sendData(socket, keyPair.getPublic());
+        ssladm.awaitCompletion();
+    }
+
+    @Override
+    protected void handleGiocate(SSLSocket socket, SSLADM ssladm) throws Exception {
+        SSLConnection.sendData(socket, null);
+        ssladm.awaitCompletion();
+    }
+
+    @Override
+    protected void handleStringheCasuali(SSLSocket socket, SSLADM ssladm) throws Exception {
+        byte[] prng = Generator.generatePRG();
+        byte[] signedPrng = signData(prng, this.banco.getKeyPair().getPrivate());
+        SSLConnection.sendData(socket, prng);
+        SSLConnection.sendData(socket, signedPrng);
+        ssladm.awaitCompletion();
+    }
+
+    @Override
+    protected void handleRisultato(SSLSocket socket, SSLADM ssladm) throws Exception {
+        String merkleRoot = this.jokerChain.calculateMerkleRootForType(4);
+        String risultato = String.valueOf(new BigInteger(merkleRoot, 16).mod(new BigInteger("37")).intValue());
+        byte[] signedRisultato = signData(risultato.getBytes(), this.banco.getKeyPair().getPrivate());
+        SSLConnection.sendData(socket, risultato);
+        SSLConnection.sendData(socket, signedRisultato);
     }  
 
 }

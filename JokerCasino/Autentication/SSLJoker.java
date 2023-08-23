@@ -1,29 +1,21 @@
 package JokerCasino.Autentication;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
-import JokerCasino.Player;
+import JokerChain.Player;
 
-public class SSLJoker extends SSLBase implements SSLClientServer {
+public class SSLJoker extends SSLBase {
 
-    private static final String TRUSTSTOREPATH = "Certs/truststore.jks";
     private static final int PORT = 4001;
     private static final int PLAYER_PORT = 3999; 
     private static final String PLAYER_HOST = "localhost";
-    private static final String PASSWORD = "aps2023";
-    private String message = "";
-    private String response;
     private SSLContext sslContext;
     private Player p;
 
@@ -33,9 +25,8 @@ public class SSLJoker extends SSLBase implements SSLClientServer {
         this.p = p;
     }
     
-    @Override
     public void startConnection() {
-        
+        String message = "";
         try {
             SSLServerSocketFactory ssf = this.sslContext.getServerSocketFactory();
             SSLServerSocket serverSocket = (SSLServerSocket) ssf.createServerSocket(PORT);
@@ -45,55 +36,40 @@ public class SSLJoker extends SSLBase implements SSLClientServer {
             SSLSocket socket = (SSLSocket) serverSocket.accept();
             System.out.println("\u001B[35m(SSLJoker) Connesso con l'Identity Provier del Ministero della Salute ...\u001B[0m");
                 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            message = reader.readLine();
+            message = (String) receiveData(socket);
 
             socket.close();
-
             Thread.sleep(500);
             System.out.println("\u001B[35m(SSLJoker) Socket chiusa.\n---\u001B[0m");
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
-        this.sendToPlayer();
-
+        
+        sendToPlayer(message);
     }
 
-    @Override
-    public String getResponse() {
-        return this.response;
-    }
-
-    @Override
-    public void setResponse(String response) {
-        this.response = response;
-    }
-
-    public void sendToPlayer() {
-
+    private void sendToPlayer(String message) {
+        String response = "";
         try {
             SSLSocketFactory ssf = this.sslContext.getSocketFactory();
             SSLSocket socket = (SSLSocket) ssf.createSocket(PLAYER_HOST, PLAYER_PORT);
             socket.startHandshake();
             
             // Estrapolazione dati
-            String codiceFiscale = this.message.split(";")[0];
+            String codiceFiscale = message.split(";")[0];
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            LocalDate dataDiNascita = LocalDate.parse(this.message.split(";")[1], formatter); 
+            LocalDate dataDiNascita = LocalDate.parse(message.split(";")[1], formatter); 
 
             if(isMaggiorenne(dataDiNascita)){
-                this.setResponse("Accesso Consentito. Benvenuto " + codiceFiscale);
+                response = "Accesso Consentito. Benvenuto " + codiceFiscale;
                 this.p.setCodiceFiscale(codiceFiscale);
                 this.p.setDataDiNascita(dataDiNascita);
             }
-            else
-                this.setResponse("Accesso Negato. Il gioco è vietato per i minori di 18 anni!\n");
-
-            OutputStream out = socket.getOutputStream();         
-            out.write(this.getResponse().getBytes());
-            
+            else{
+                response = "Accesso Negato. Il gioco è vietato per i minori di 18 anni!";
+                this.p = new Player();
+            }
+            sendData(socket, response);            
             socket.close();
 
         } catch (Exception ex) {

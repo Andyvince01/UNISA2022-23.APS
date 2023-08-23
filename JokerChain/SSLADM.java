@@ -2,10 +2,11 @@ package JokerChain;
 
 import java.security.KeyStore;
 import java.security.PublicKey;
-import java.security.Signature;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Semaphore;
+
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
@@ -13,37 +14,25 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 
 import JokerCasino.Autentication.SSLBase;
-import JokerCasino.Autentication.SSLClientServer;
-import JokerChain.Utils.SocketUtils;
+import JokerChain.Utils.SSLConnection;
 
-public class SSLADM extends SSLBase implements SSLClientServer{
+public class SSLADM extends SSLBase{
 
     private static final int PORT = 4002;
     private SSLContext sslContext;
     private JokerChain jokerChain;
     private KeyStore ks;
     private CountDownLatch countDownLatch;
+    private static final Semaphore inputSemaphore = new Semaphore(1);
 
     public SSLADM(String keystorePath, JokerChain jokerChain) throws Exception {
         super(keystorePath);
         this.sslContext = getSslContext();
         this.jokerChain = jokerChain;
         this.ks = getKs();
-        this.countDownLatch = new CountDownLatch(2);
+        this.countDownLatch = new CountDownLatch(4);
     }
 
-    @Override
-    public String getResponse() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void setResponse(String response) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
     public void startConnection() {
         try {
             SSLServerSocketFactory ssf = this.sslContext.getServerSocketFactory();
@@ -52,7 +41,7 @@ public class SSLADM extends SSLBase implements SSLClientServer{
 
             System.out.println("\u001B[33m(SSLADM) In attesa di connessioni ...\u001B[0m");
             int count = 0;
-            while(count < 2){
+            while(count < 4){
                 final SSLSocket socket = (SSLSocket) serverSocket.accept();
                 new Thread(() -> handleClientConnection(socket)).start();;
                 count++;
@@ -65,7 +54,7 @@ public class SSLADM extends SSLBase implements SSLClientServer{
 
     public void handleClientConnection(SSLSocket socket) {
         try{
-            String client = (String) SocketUtils.receiveData(socket);
+            String client = (String) SSLConnection.receiveData(socket);
             System.out.println("\u001B[33m(SSLADM) Connesso con " + client + "!\u001B[0m");
 
             SSLSession session = socket.getSession();
@@ -81,19 +70,19 @@ public class SSLADM extends SSLBase implements SSLClientServer{
             }
 
             // Blocco Chiavi
-            Thread.sleep(100);
-            PublicKey publicKey = (PublicKey) SocketUtils.receiveData(socket);
+            Thread.sleep(500);
+            PublicKey publicKey = (PublicKey) SSLConnection.receiveData(socket);
             System.out.println("\u001B[33m(SSLADM) Ricevuta chiave pubblica da: " + client + "\u001B[0m");
             this.jokerChain.addTransaction(new Transaction(2, Base64.getEncoder().encodeToString(publicKey.getEncoded()), client));
             this.countDownLatch.countDown();
             if(this.countDownLatch.getCount() == 0)
-                this.resetLatch(2);
+                this.resetLatch(4);
 
             // Blocco Giocate
-            Thread.sleep(100);
-            String g = (String) SocketUtils.receiveData(socket);
+            Thread.sleep(500);
+            String g = (String) SSLConnection.receiveData(socket);
             if(g != null){
-                byte[] signedG = (byte[]) SocketUtils.receiveData(socket);
+                byte[] signedG = (byte[]) SSLConnection.receiveData(socket);
                 System.out.println("\u001B[33m(SSLADM) Ricevuta giocata da: " + client + "\u001B[0m");
                 if (!verifySignature(g.getBytes(), signedG, publicKey))
                     System.out.println("\u001B[33m(SSLADM) Firma non valida. Giocata potenzialmente compromessa!\u001B[0m");   
@@ -104,13 +93,14 @@ public class SSLADM extends SSLBase implements SSLClientServer{
             }
             this.countDownLatch.countDown();
             if(this.countDownLatch.getCount() == 0)
-                this.resetLatch(2);
+                this.resetLatch(4);
 
             // Blocco Stringhe Casuali
-            Thread.sleep(100);
-            byte[] prng = (byte[]) SocketUtils.receiveData(socket);
+            Thread.sleep(500);
+            inputSemaphore.acquire();
+            byte[] prng = (byte[]) SSLConnection.receiveData(socket);
             if(prng != null){
-                byte[] signedPrng = (byte[]) SocketUtils.receiveData(socket);
+                byte[] signedPrng = (byte[]) SSLConnection.receiveData(socket);
                 System.out.println("\u001B[33m(SSLADM) Ricevuta stringa casuale da: " + client + "\u001B[0m");
                 if (!verifySignature(prng, signedPrng, publicKey))
                     System.out.println("\u001B[33m(SSLADM) Firma non valida. Stringa potenzialmente compromessa!\u001B[0m");   
@@ -119,23 +109,31 @@ public class SSLADM extends SSLBase implements SSLClientServer{
                     this.jokerChain.addTransaction(new Transaction(4, Base64.getEncoder().encodeToString(prng), client));
                 }
             }
-
+            inputSemaphore.release();
             this.countDownLatch.countDown();
             if(this.countDownLatch.getCount() == 0)
-                this.resetLatch(2);
+                this.resetLatch(4);
 
             // Blocco Risultato
-            Thread.sleep(100);
-            String risultato = (String) SocketUtils.receiveData(socket);
+            Thread.sleep(500);
+            inputSemaphore.acquire();
+            String risultato = (String) SSLConnection.receiveData(socket);
             if(risultato != null){
-                byte[] signedRisultato = (byte[]) SocketUtils.receiveData(socket);
+                byte[] signedRisultato = (byte[]) SSLConnection.receiveData(socket);
                 System.out.println("\u001B[33m(SSLADM) Ricevuto risultato da: " + client + "\u001B[0m");
                 if (!verifySignature(risultato.getBytes(), signedRisultato, publicKey))
                     System.out.println("\u001B[33m(SSLADM) Firma non valida. Risultato potenzialmente compromessa!\u001B[0m");   
                 else{
                     System.out.println("\u001B[33m(SSLADM) Firma valida. Inserimento del risultato nella JokerChain in corso ...\u001B[0m");              
                     this.jokerChain.addTransaction(new Transaction(5, risultato, client));
+                    System.out.println("---\n\u001B[33m(SSLADM) Il numero estratto è: \u001B[1m" + risultato + "\u001B[0m\n---");
                 }
+            }
+            inputSemaphore.release();
+            if(risultato == null && g != null && !g.equals("00000000000")){
+                Roulette roulette = new Roulette();
+                String numero = jokerChain.filterTransaction(5, jokerChain.getCurrentID() - 1).get(0).getData();
+                System.out.println("\u001B[33m(SSLADM) La giocata di " + client + " è \u001B[1m" + roulette.esito(numero, g) + "\u001B[0m");            
             }
 
         } catch(Exception e){
@@ -143,22 +141,18 @@ public class SSLADM extends SSLBase implements SSLClientServer{
         }
     }
 
-    private boolean verifySignature(byte[] data, byte[] signatureBytes, PublicKey publicKey) {
-        try {
-            Signature signature = Signature.getInstance("SHA256withRSA");
-            signature.initVerify(publicKey);
-            signature.update(data);
-            return signature.verify(signatureBytes);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }    
-    }
-
+    /**
+     * Inizializza un nuovo oggetto 'CountDownLatch' così da inizializzare nuovamente il latch.
+     * @param count - Il numero di volte che 'countDown' deve essere invocato prima che i thread posso andare oltre lo stato di attesa.
+     */
     public void resetLatch(int count) {
         this.countDownLatch = new CountDownLatch(count);
     }
 
+    /**
+     * Costringe il thread corrente ad aspettare che 'latch' raggiunga il valore zero. 
+     * @throws InterruptedException - Lancia un'eccezione nel caso in cui il thread corrente venga interrotto.
+     */
     public void awaitCompletion() throws InterruptedException {
         this.countDownLatch.await();
     }
