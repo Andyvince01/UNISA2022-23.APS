@@ -1,5 +1,50 @@
 # Unisa2022-23.APS
 
+Durante la pandemia, il proprietario di una Sala Bingo, Mister Joker, ha deciso 
+di creare delle stanze virtuali online in cui le persone possono partecipare a 
+vari giochi di fortuna, ossia giochi dove sulla base di valori casuali c'è un 
+vincitore. Per realizzare questa idea, contatta un gruppo di studenti del corso 
+di laurea magistrale in ingegneria informatica dell'università di Salerno per 
+creare una funzionalità che generi in modo casuale stringhe continue. 
+L'obiettivo è creare un sistema trasparente che eviti imbrogli. 
+Il governo ha imposto il divieto di partecipare ad eventi sociali online a chi non 
+possiede il Green Pass. Tuttavia, il garante per la protezione dei dati personali 
+ha vietato l’invio del Green Pass attraverso canali telematici. Il governo ha 
+quindi pubblicato una call aperta a tutti per proposte di formato del Green 
+Pass 2.0 che preveda l'unico uso delle informazioni strettamente necessarie 
+per accedere a un servizio. Mister Joker ha chiesto agli studenti di creare una 
+funzionalità per l'accesso alle sale virtuali della sua Sala Bingo, anche se non 
+sa ancora quali informazioni saranno necessarie nel Green Pass 2.0. Tuttavia, 
+questo non è un problema, perché gli studenti intendo progettare un sistema 
+dinamico che permette al proprietario del Green Pass 2.0 di usarlo in sicurezza 
+al variare delle politiche nel tempo circa quali dati bisogna possedere per 
+accedere al servizio. Il Green Pass 2.0 progettato dagli studenti viene emesso 
+dal Ministero della Salute e permette agli utenti di identificarsi con la sala 
+Bingo per accedere al proprio profilo e, successivamente, alla funzionalità di 
+generazione continua di stringhe casuali.
+Ci sono oppositori dell'innovazione chiamati tecnocrati che puntano sui rischi 
+delle nuove tecnologie e sono considerati allarmisti e complottisti dai 
+sostenitori dell'innovazione. Per evitare la strumentalizzazione, è necessario 
+che il sistema sia trasparente e aperto alla verifica da parte di tutti. Mister 
+Joker ha sottolineato l'importanza di questa trasparenza, citando una canzone 
+di Franco Califano che diceva: "Non mi fido di nessuno".
+
+
+# Esecuzione dell'applicazione
+Per l'esecuzione dell'applicazione è sufficiente scaricare e unzippare la cartella ed eseguire sul terminale la seguente istruzione:
+
+`java -jar joker.jar`
+
+A questo punto verrà chiesto di inserire il path al GP2.0 per poter accedere. Il progetto fornisce tre certificati differenti:
+
+1. "Certs/andy_keystore.jks": Certificato valido dalla durata di 180 giorni (Valido da Sabato 19/08/2023 18:04:33 fino a Giovedì 15/02/2024 17:04:33). Attraverso questo certificato è possibile simulare l'esperienza di gioco.
+
+1. "Certs/mario_keystore.jks": Certificato scaduto dalla durata di 2 giorni (Valido da Lunedì 20/08/2023 14:00:00 fino a Mercoledì 22/08/2023 14:00:00). In questo caso, non viene permesso l'accesso al gioco.
+
+1. "Certs/infante_keystore.jks": Certificato valido dalla durata di 180 giorni  (Valido da Mercoledi 23/08/2023 23:37:40 fino a Lunedì 19/02/2024 22:37:40). In questo caso, non viene permesso l'accesso al gioco, essendo il giocatore minorenne (Data di Nascita: ).
+
+# Script Comandi Openssl e Keytool
+
 # Generazione parametri
 `openssl ecparam -name prime256v1 -out prime256v1.pem`
 
@@ -74,6 +119,9 @@
 `keytool -importkeystore -destkeystore infante_keystore.jks -srckeystore infante.p12 -srcstoretype PKCS12 -alias infante -srcstorepass aps2023 -deststorepass aps2023`
 
 # Generazione del Truststore
+`openssl x509 -in ms_cert.pem -out ms_cert.der -outform der`
+`openssl x509 -in me_cert.pem -out me_cert.der -outform der`
+
 `keytool -genkeypair -keyalg RSA -alias dummy -keystore truststore.jks -storepass aps2023 -dname "CN=dummy, OU=dummy, O=dummy, L=dummy, S=dummy, C=dummy" -validity 1`
 `keytool -delete -alias dummy -keystore truststore.jks -storepass aps2023`
 

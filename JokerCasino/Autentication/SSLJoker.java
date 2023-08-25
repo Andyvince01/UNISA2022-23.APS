@@ -9,7 +9,7 @@ import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
-import JokerChain.Player;
+import JokerCasino.JokerChain.Player;
 
 public class SSLJoker extends SSLBase {
 
@@ -34,16 +34,16 @@ public class SSLJoker extends SSLBase {
     public void startConnection() {
         String message = "";
         try {
+            // Inizializzazione socket.
             SSLServerSocketFactory ssf = this.sslContext.getServerSocketFactory();
             SSLServerSocket serverSocket = (SSLServerSocket) ssf.createServerSocket(PORT);
             serverSocket.setNeedClientAuth(true);
-
             System.out.println("\u001B[35m(SSLJoker) In attesa di connessioni ...\u001B[0m");
             SSLSocket socket = (SSLSocket) serverSocket.accept();
             System.out.println("\u001B[35m(SSLJoker) Connesso con l'Identity Provier del Ministero della Salute ...\u001B[0m");
-                
+            // Ricezione dati dall'IdP del MS.
             message = (String) receiveData(socket);
-
+            // Chiusura Socket
             socket.close();
             Thread.sleep(500);
             System.out.println("\u001B[35m(SSLJoker) Socket chiusa.\n---\u001B[0m");
