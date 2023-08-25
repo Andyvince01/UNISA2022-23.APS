@@ -24,7 +24,7 @@ dal Ministero della Salute e permette agli utenti di identificarsi con la sala
 Bingo per accedere al proprio profilo e, successivamente, alla funzionalità di 
 generazione continua di stringhe casuali.
 
-🦊 Ci sono oppositori dell'innovazione, chiamati **no-fox**, che puntano sui rischi 
+🦊 Ci sono gli oppositori dell'innovazione, chiamati **no-fox**, che puntano sui rischi 
 delle nuove tecnologie e sono considerati allarmisti e complottisti dai 
 sostenitori dell'innovazione. Per evitare la strumentalizzazione, è necessario 
 che il sistema sia trasparente e aperto alla verifica da parte di tutti. Mister 
