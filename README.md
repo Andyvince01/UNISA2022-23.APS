@@ -133,6 +133,10 @@ keytool -importkeystore -destkeystore mario_keystore.jks -srckeystore mario.p12 
 openssl pkcs12 -export -out infante.p12 -inkey infante_key.pem -in infante_cert.pem -name infante -passout pass:aps2023
 keytool -importkeystore -destkeystore infante_keystore.jks -srckeystore infante.p12 -srcstoretype PKCS12 -alias infante -srcstorepass aps2023 -deststorepass aps2023
 ```
+Il seguente comando viene utilizzato per la stampa delle informazioni contenute nei keystore:
+```
+keytool -list -keystore andy_keystore.jks -storepass aps2023
+```
 ### Generazione del Truststore
 I seguenti comandi vengono utilizzati per la generazione del **truststore** utilizzato in Java per la verifica dei certificati.
 ```
@@ -145,7 +149,7 @@ keytool -delete -alias dummy -keystore truststore.jks -storepass aps2023
 keytool -importcert -file ms_cert.pem -alias ms -keystore truststore.jks -storepass aps2023
 keytool -importcert -file me_cert.pem -alias me -keystore truststore.jks -storepass aps2023
 ```
-Il seguente comando viene utilizzato per la stampa delle informazioni contenute nei keystore e nel truststore:
+Il seguente comando viene utilizzato per la stampa delle informazioni contenute nel truststore:
 ```
 keytool -list -keystore truststore.jks -storepass aps2023
 ```
