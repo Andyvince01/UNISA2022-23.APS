@@ -32,7 +32,7 @@ Joker ha sottolineato l'importanza di questa trasparenza, citando una canzone
 di Franco Califano che diceva: *"Non mi fido di nessuno"*.
 
 ## Esecuzione dell'applicazione
-Per l'esecuzione dell'applicazione è sufficiente *scaricare* e *unzippare* la cartella ed eseguire sul terminale la seguente istruzione:
+Per l'esecuzione dell'applicazione è sufficiente *scaricare* e *unzippare* la cartella. Una volta fatto, occorre aprire il terminale dalla cartella in qeustione ed eseguire la seguente istruzione:
 
 ☕ **`java -jar joker.jar`**
 
