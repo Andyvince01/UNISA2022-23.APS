@@ -119,7 +119,7 @@ public abstract class SSLBase {
     }
 
     /**
-     * Metodo privato che implementa la logica dietro all'inizializzazione di un constesto SSL. Prevede, quindi, di inizializzare
+     * Metodo privato che implementa la logica dietro all'inizializzazione di un contesto SSL. Prevede, quindi, di inizializzare
      * un contesto SSL 'sslContext' specificando un TrustManagerFactory ed eventualmente un KeyManagerFactory.
      * @throws Exception - Lancia un'eccezione in caso di errori durante l'inizializzazione del contesto SSL 
      * (e.g. NoSuchAlgorithmException, KeyStoreException, etc.).
